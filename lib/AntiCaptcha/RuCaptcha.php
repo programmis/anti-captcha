@@ -226,23 +226,27 @@ class RuCaptcha extends Request
         $start_time = time();
 
         if ($image_path) {
-            if (!file_exists($image_path)) {
-                if (self::$logger) {
-                    self::$logger->critical('image ' . $image_path . ' not found');
-                }
-
-                return false;
-            }
-            $fp   = fopen($image_path, "r");
             $body = "";
-            if ($fp != false) {
-                while (!feof($fp)) {
-                    $body .= fgets($fp, 1024);
+            if (file_exists($image_path)) {
+                $fp = fopen($image_path, "r");
+                if ($fp != false) {
+                    while (!feof($fp)) {
+                        $body .= fgets($fp, 1024);
+                    }
+                    fclose($fp);
+                } else {
+                    if (self::$logger) {
+                        self::$logger->critical("could not read file $image_path");
+                    }
+
+                    return false;
                 }
-                fclose($fp);
             } else {
+                $body = file_get_contents($image_path, FILE_BINARY);
+            }
+            if (!$body) {
                 if (self::$logger) {
-                    self::$logger->critical("could not read file $image_path");
+                    self::$logger->critical("file $image_path couldn't by empty");
                 }
 
                 return false;
