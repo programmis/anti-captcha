@@ -103,6 +103,14 @@ abstract class Request extends \ApiRator\Includes\Request implements AntiCaptcha
     /**
      * @return mixed
      */
+    public function getResultClass()
+    {
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getJsonResponse()
     {
         return $this->json_response;

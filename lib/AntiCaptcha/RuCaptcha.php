@@ -221,6 +221,12 @@ class RuCaptcha extends Request
     }
 
     /** @inheritdoc */
+    public function getResultClass()
+    {
+        return new RuCaptchaResult();
+    }
+
+    /** @inheritdoc */
     public function recognize($image_path = '')
     {
         $start_time = time();
@@ -275,7 +281,7 @@ class RuCaptcha extends Request
 
                     break;
                 }
-                $result = new RuCaptchaResult();
+                $result = $this->getResultClass();
                 $result->setAccessToken($this->getAccessToken());
                 $result->setId($captcha_id);
                 if ($result->recognize()) {
